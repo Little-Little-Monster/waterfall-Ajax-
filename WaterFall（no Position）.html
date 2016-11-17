@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+	<style>
+		*{
+			margin:0;
+			padding: 0;
+		}
+		#show{
+			width: 98%;
+			/*border:1px solid red;*/
+			min-height: 800px;
+		}
+		.box img{
+		width: 200px;
+		border-radius:5px;
+		box-shadow:5px 5px 5px #ccc;
+		margin:5px;
+		}
+		.box{
+			margin:5px;
+			width: 215px;
+			/*background: red;*/
+		}
+	</style>
+	<script src="../jquery-1.12.4.min.js"></script>
+	<script>
+		$(function(){
+			var position = [];
+			$(window).on("load",function(){
+					var showWidth = $("#show").innerWidth(),
+						boxWidth = $(".box").outerWidth(true),
+						clos = Math.floor(showWidth/boxWidth),
+						space = parseInt((showWidth-boxWidth*clos)/(clos+1)),
+						vspace = 10;
+						
+
+				//创建box
+				for(var i=0;i<clos;i++){
+					if($(".box").length<clos){
+						$("#show").append("<div class='box'></box>").children().css({
+							"margin-left":space,
+							"float":"left"
+						}).width($(".box").outerWidth());
+					}
+					
+				}
+				//为数组初始化添加元素
+				for(var i=0;i<clos;i++){
+					position.push(0);
+				};
+				
+	
+				//动态添加图片
+				var html = "";
+				for(var i=2;i<55;i++){
+					html += '<img src="img/'+i+'.jpg" alt="" />';
+				}
+				$(html).each(function(index,element){
+					$(this).on("load",function(){
+						var min = Math.min.apply(null,position);
+						var minIndex = $.inArray(min,position);
+						if(minIndex!=-1){
+							$(".box").eq(minIndex).append(element);	
+							position[minIndex] += $(element).outerHeight();
+						}
+					})	
+				});
+
+			//动态从服务器加载图片
+				/*var page = 2;
+				var isLoading = false;
+
+				$(window).on("scroll",function(){
+					
+					var min = Math.min.apply(null,position);
+					var scTop = $(this).scrollTop();
+					var winHeight = $(window).height();
+					
+					if(!isLoading&&scTop>min-winHeight){
+						isLoading = true;
+						$.get(
+							"http://10.7.157.56:8080/api/more.do",
+							{"page":page++},
+							function(data){
+								console.log(data);
+								var array = data.data;
+								var html = "";
+								$.each(array,function(){
+									html += '<img src="'+this.path+'" alt= />';
+								});
+
+								$(html).each(function(){
+									$(this).on("load",function(){
+										var minIndex = $.inArray(Math.min.apply(null,position),position);
+										$(".box").eq(minIndex).append(this);
+										position[minIndex] += $(this).outerHeight(true);
+									})
+								});
+							},
+							"json"
+						);
+						isLoading = false;
+					};
+
+				});*/
+
+				//获取百度api图片
+				var isLoading = false;
+				$(window).on("scroll",function(){
+					var winHeight = $(window).height(),
+						minHeight = Math.min.apply(null,position),
+						minIndex = $.inArray(minHeight,position);
+
+					if(!isLoading && $(this).scrollTop()>(minHeight-winHeight)){
+						console.log("msfgh");
+						isLoading = true;
+						$.ajax({
+							url:"http://apis.baidu.com/txapi/mvtp/meinv?callback=?",
+							type:"get",
+							headers:{"apikey":"2fc8225784dd0b473ef3f43ad07a1bae"},
+							datatype:"json",
+							data:{"num":15},
+							success:function(data){
+								console.log(data);
+								var data = data.newslist;
+								var html = "";
+									$.each(data,function(index,element){
+										html += "<img src='"+this.picUrl+"'alt= />";
+									});
+
+									$(html).each(function(){
+										$(this).on("load",function(){
+											var minIndex = $.inArray(Math.min.apply(null,position),position);
+											$(".box").eq(minIndex).append(this);
+											position[minIndex] += $(this).outerHeight(true);
+										});
+									});
+								isLoading = false;
+							}
+						});
+					}
+
+				});
+			});
+
+		});
+	</script>
+</head>
+<body>
+	<div id="show">	
+		
+		<div class="box">
+			<img src="img/1.jpg" alt="" />
+		</div>
+
+	</div>
+</body>
+</html>

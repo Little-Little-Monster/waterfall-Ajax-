@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>瀑布流</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		#show{
+			width: 90%;
+			height: 1000px;
+			border:1px solid red;
+			margin:0 auto;
+			position: relative;
+		}
+		.pic{
+			position: absolute;
+			left: 0;
+			top: 0;
+			border:1px solid black;
+		}
+		.pic img{
+			width:200px;
+		}
+	</style>
+	<script src="jquery-1.12.4.min.js""></script>
+	<script>
+	$(function(){
+			window.onload = function(){
+			var picWidth = $(".pic").first().outerWidth();
+			
+			var	vspace = 10;
+			var size = Math.floor($("#show").innerWidth()/($(".pic:first").outerWidth()));
+			var space = ($("#show").innerWidth()-size*picWidth)/size+1;
+			console.log(space);
+			var position = [];
+			/*$.each($(".pic"),function(index,element){
+				var poindex = index%size;
+				if(index<=size){
+					position.push(10);
+					$(this).css({
+						"left":poindex*picWidth+space
+					});
+				}
+
+				$(".pic").eq(poindex).css({
+					"left":poindex*picWidth+space
+				})
+
+
+			});*/
+
+
+
+			//原生js实现
+			var pics = $(".pic");
+			for(var i= 0;i<pics.length;i++){
+				// var index = i%size;
+				console.log(size);
+				if(i<size){
+					position.push(vspace);
+				}
+				var vindex = getIndex(position);
+				console.log(vindex);
+				console.log(position);
+				pics[i].style.left = (vindex*picWidth+(vindex+1)*space)+"px";
+				pics[i].style.top = position[vindex]+"px";
+
+				position[vindex] += pics[i].offsetHeight+space;
+			}
+
+			function getIndex(position){
+				var vindex = 0;
+
+				for(var i = 0;i<position.length;i++){
+					if(position[i]<position[vindex]){
+						vindex = i;
+						// console.log(position[i]);
+					}
+				}
+				return vindex;
+			}
+		}
+	});
+	$(function(){
+
+	});
+
+
+	</script>
+</head>
+<body>
+	<div id="show">
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/1.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/2.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/3.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/4.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/5.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/6.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/7.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/8.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/9.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/10.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/11.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+		<div class="pic">
+			<p>图片标题</p>
+			<img src="img/12.jpg" alt="" />
+			<p>图片描述</p>
+		</div>
+
+	</div>
+</body>
+</html>
